@@ -82,11 +82,33 @@ public class MainTwellowCrawler {
             }
         }
 
-        ArrayList<String> nicks = getNicksForCategory(atc.iterator().next());
+     
         /*for (String nick : nicks) {
          System.out.println(nick);
          }*/
 
+    }
+
+    public static String getNicksForCategoryNames(ArrayList<String> categories) {
+        
+        HashSet<TwellowCategory> atc = getMainCategoryList();
+        StringBuilder output = new StringBuilder();
+
+        for (TwellowCategory tc : atc) {
+            if (!categories.contains(tc.getName())) {
+                continue;
+            }
+            //System.out.println(String.format("%s\t%d\t http://twellow.com%s ", tc.getName(), tc.getUsers(), tc.getUrl()));
+
+            ArrayList<String> nicks = getNicksForCategory(tc);
+            for (String nick : nicks) {
+                output.append(tc.getName())
+                        .append('\t')
+                        .append(nick)
+                        .append('\n');
+            }
+        }
+        return output.toString();
     }
 
     private static String getUrlForCategory(TwellowCategory tc) {

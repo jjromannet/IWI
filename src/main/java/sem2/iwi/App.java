@@ -7,6 +7,8 @@ import sem2.iwi.bayes.NBValuesVector;
 import sem2.iwi.bayes.NBAttributeValue;
 import java.util.ArrayList;
 import java.util.HashMap;
+import javax.swing.JFrame;
+import sem2.iwi.gui.MainWindow;
 
 /**
  * Hello world!
@@ -15,6 +17,10 @@ import java.util.HashMap;
 public class App {
 
     public static void main(String[] args) {
+        JFrame f = new MainWindow();
+        f.setVisible(true);
+    }
+    public static void testRun(){
         try {
 
             HashMap<String, String> hm = InOut.getInputStreamAsOutputDictionary(Thread.currentThread().getContextClassLoader().getResourceAsStream("input2_test.dict"));

@@ -32,12 +32,20 @@ public class Stemmer {
         }
 
     }
+    
+    static MaxentTagger mxt = null;
+    private static synchronized MaxentTagger getMaxentTagger() throws IOException, ClassNotFoundException{
+        if(mxt == null){
+            mxt = new MaxentTagger("english-left3words-distsim.tagger");
+        }
+        return mxt;
+    }
 
     public static ArrayList<String> getWordsOnlyForTags(String forPosTagging, String... tags) {
         ArrayList<String> retVal = new ArrayList<>();
         
         try {
-            MaxentTagger tagger = new MaxentTagger("english-left3words-distsim.tagger");
+            MaxentTagger tagger = getMaxentTagger();
             List<List<HasWord>> sentences = MaxentTagger.tokenizeText(new StringReader(forPosTagging));
 
             for (List<HasWord> sentence : sentences) {

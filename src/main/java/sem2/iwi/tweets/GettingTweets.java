@@ -4,16 +4,19 @@
  */
 package sem2.iwi.tweets;
 
+import com.sun.imageio.plugins.common.BogusColorSpace;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import sem2.iwi.nlp.BagOfWords;
 import sem2.iwi.utils.IWIUtils;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
@@ -23,7 +26,8 @@ import twitter4j.auth.AccessToken;
  * @author kubeusz
  */
 public class GettingTweets {
-    
+    private final static BagOfWords bow = new BagOfWords();
+
     public static void writeToFileTwellowCategories(String content){
         
         FileWriter fw = null;
@@ -95,32 +99,33 @@ public class GettingTweets {
         }
         
     }
+    static Map<String,Integer> categoryMappings = null;
     
     public static Map<String,Integer> readCategoriesDictionary(){
-        
-        Map<String,Integer> categoryMappings = new HashMap<String,Integer>();
-        
-        Path path = Paths.get(IWIUtils.getPropertyValue("categoriesDictionaryFile"));
-        try {
-            Scanner scanner =  new Scanner(path);
-            
-            while (scanner.hasNextLine()){
+        if(categoryMappings == null){
+            categoryMappings = new HashMap<String,Integer>();
 
-                String[] result = scanner.nextLine().split("\\t");
-                
-                if(result.length!=1){
-                    categoryMappings.put(result[0], Integer.parseInt(result[1]));
+            Path path = Paths.get(IWIUtils.getPropertyValue("categoriesDictionaryFile"));
+            try {
+                Scanner scanner =  new Scanner(path);
+
+                while (scanner.hasNextLine()){
+
+                    String[] result = scanner.nextLine().split(" ");
+
+                    if(result.length!=1){
+                        categoryMappings.put( result[1],Integer.parseInt(result[0]));
+                    }
+
                 }
-                
+                scanner.close();
+            } catch (IOException ex) {
+                Logger.getLogger(GettingTweets.class.getName()).log(Level.SEVERE, null, ex);
             }
-            scanner.close();
-        } catch (IOException ex) {
-            Logger.getLogger(GettingTweets.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         return categoryMappings;
     }
-    
+    private static HashMap<String, ArrayList<String>> forBOW = null;
     public static String gettingTweets(List<String> users, String noOfTweets){
         
         Twitter twitter = getTwitterInstance();
@@ -128,6 +133,7 @@ public class GettingTweets {
         FileWriter fw = null;
         BufferedWriter bw =null;
         String content = "";
+        forBOW = new HashMap<>();
         
         try {
             fw = new FileWriter(IWIUtils.getPropertyValue("usersTweetsFile"));
@@ -156,6 +162,13 @@ public class GettingTweets {
                         List<Status> statuses = twitter.getUserTimeline(result[1], new Paging(1,Integer.parseInt(noOfTweets) ));
 
                         for (Status status : statuses) {
+                            if(forBOW.containsKey(result[0])){
+                                forBOW.get(result[0]).add(status.getText());
+                            }else{
+                                ArrayList<String> altmp = new ArrayList<>();
+                                altmp.add(status.getText());
+                                forBOW.put(result[0], altmp);
+                            }
                             bw.write(result[0] + " || " + status.getText() +"\n");
                             content+=result[0] + " || " + status.getText() +"\n";
                         }
@@ -172,9 +185,25 @@ public class GettingTweets {
             Logger.getLogger(GettingTweets.class.getName()).log(Level.SEVERE, null, tex);
         }
         
+        for (Map.Entry<String, ArrayList<String>> me : forBOW.entrySet()) {
+            bow.addNewBag(me.getValue());
+        }
         
         
         return content;
+    }
+    
+    public static ArrayList<ArrayList<Integer>> getForBayes(){
+        
+        ArrayList<ArrayList<Integer>> retVal = new ArrayList<>();
+        if(forBOW != null){
+            for (Map.Entry<String, ArrayList<String>> me : forBOW.entrySet()) {
+                    for (String twit : me.getValue()) {
+                        retVal.add(getAllMetrics(twit, me.getKey()));
+                    }
+                }
+        }
+        return retVal;
     }
     
     public static Twitter getTwitterInstance(){
@@ -233,5 +262,12 @@ public class GettingTweets {
                 
         return metrics;
     }
-     
+     public static ArrayList<Integer> getAllMetrics(String twit, String category){
+        ArrayList<Integer> retVal = new ArrayList<>();
+        Collections.addAll(retVal, getGenericMetrics(twit));
+        retVal.addAll(bow.scoreAgainsAll(twit));
+        retVal.add(readCategoriesDictionary().get(category));
+        return retVal;
+    }
+    
 }

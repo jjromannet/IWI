@@ -70,7 +70,7 @@ public class TwellowCrawler extends javax.swing.JPanel {
         jTextArea1.setRows(5);
         jScrollPane2.setViewportView(jTextArea1);
 
-        jButton2.setText("Odświerz");
+        jButton2.setText("Odśwież");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);

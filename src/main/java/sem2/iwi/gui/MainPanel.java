@@ -4,7 +4,18 @@
  */
 package sem2.iwi.gui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import sem2.iwi.bayes.NBScores;
+import sem2.iwi.bayes.NBValuesVector;
+import sem2.iwi.bayes.NaiveClassifier;
+import sem2.iwi.io.InOut;
 
 /**
  *
@@ -40,6 +51,7 @@ public class MainPanel extends javax.swing.JPanel {
         jTextField3 = new javax.swing.JTextField();
         jButton3 = new javax.swing.JButton();
         jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
 
         jLabel1.setText("Zbiór uczący");
 
@@ -67,7 +79,19 @@ public class MainPanel extends javax.swing.JPanel {
 
         jButton3.setText("Klasyfikuj");
 
-        jButton4.setText("Uruchom");
+        jButton4.setText("Testowanie");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText("Uczenie");
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
 
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
@@ -88,7 +112,7 @@ public class MainPanel extends javax.swing.JPanel {
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED))
                             .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
                                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                                    .add(jTextField2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
+                                    .add(jTextField2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                                     .add(jTextField1))
                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
@@ -97,7 +121,8 @@ public class MainPanel extends javax.swing.JPanel {
                                 .add(12, 12, 12)))
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
                             .add(jButton4, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(jButton3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE)))
+                            .add(jButton3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jButton5, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .add(layout.createSequentialGroup()
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                             .add(jLabel1)
@@ -113,7 +138,8 @@ public class MainPanel extends javax.swing.JPanel {
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(jTextField1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(jButton1))
+                    .add(jButton1)
+                    .add(jButton5))
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
                 .add(jLabel2)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
@@ -137,26 +163,73 @@ public class MainPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION){
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             jTextField1.setText(fc.getSelectedFile().getAbsolutePath());
         }
-        
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         final JFileChooser fc = new JFileChooser();
         int returnVal = fc.showOpenDialog(this);
-        if(returnVal == JFileChooser.APPROVE_OPTION){
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
             jTextField2.setText(fc.getSelectedFile().getAbsolutePath());
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+    private NaiveClassifier nc = null;
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+        File map = new File(jTextField1.getText() + ".dict");
+        File f = new File(jTextField1.getText());
+        if (f.exists()) {
+            try {
+                ArrayList<NBValuesVector> alnbvv = InOut.getInputStreamAsVectorList(new FileInputStream(f));
+                HashMap<String, String> hm = new HashMap<>();
+                if (map.exists()) {
+                    hm = InOut.getInputStreamAsOutputDictionary(new FileInputStream(map));
+                }
+                if (hm.isEmpty()) {
+                    hm = new HashMap<>();
+                    for (int i = 0; i < 26; i++) {
+                        hm.put(Integer.toString(i), Integer.toString(i));
+                    }
+                }
+                nc = new NaiveClassifier(alnbvv.get(0).size(), hm);
 
+                for (NBValuesVector nbvv : alnbvv) {
+                    nc.learnNextVector(nbvv, nc.getOutputValueForString(nbvv.getExpectedValue()));
+                }
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        } else {
+            // TODO
+        }
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+        File f = new File(jTextField2.getText());
+        if (nc != null && f.exists()) {
+            try {
+                ArrayList<NBValuesVector> alnbvv = InOut.getInputStreamAsVectorList(new FileInputStream(f));
+                NBScores nbs = nc.test(alnbvv);
+                jTextArea1.append(nbs.toString());
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+    }//GEN-LAST:event_jButton4ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

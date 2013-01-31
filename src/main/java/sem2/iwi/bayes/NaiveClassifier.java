@@ -4,6 +4,7 @@
  */
 package sem2.iwi.bayes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,5 +87,19 @@ public class NaiveClassifier {
             summarised *= attributes[i].getProbablity(nbValuesVector.get(i), nbov);
         }
         return summarised;
+    }
+
+    public NBScores test(ArrayList<NBValuesVector> alnbvv) {
+        NBScores nbs = new NBScores();
+        
+        for (NBValuesVector nBValuesVector : alnbvv) {
+            NBOutputValue nbov = classifyVector(nBValuesVector);
+            if(nbov.equals(getOutputValueForString(nBValuesVector.getExpectedValue()))){
+                nbs.addPositive(nbov);
+            }else{
+                nbs.addNegative(getOutputValueForString(nBValuesVector.getExpectedValue()));
+            }
+        }
+        return nbs;
     }
 }

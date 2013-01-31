@@ -257,8 +257,8 @@ public class GettingTweets {
         
         metrics[5] = twit.length();
         
-        System.out.println(metrics[3]);
-        System.out.println(metrics[4]);
+        //System.out.println(metrics[3]);
+        //System.out.println(metrics[4]);
                 
         return metrics;
     }

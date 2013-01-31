@@ -193,7 +193,7 @@ public class MainPanel extends javax.swing.JPanel {
                 }
                 if (hm.isEmpty()) {
                     hm = new HashMap<>();
-                    for (int i = 0; i < 26; i++) {
+                    for (int i = 0; i < 27; i++) {
                         hm.put(Integer.toString(i), Integer.toString(i));
                     }
                 }

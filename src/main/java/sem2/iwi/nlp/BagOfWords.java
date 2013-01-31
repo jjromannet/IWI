@@ -57,15 +57,16 @@ public class BagOfWords {
             categoryBands.add(catBounds);
         }
     }
+
     public ArrayList<ArrayList<Integer>> normalize(ArrayList<ArrayList<Integer>> toNormalize) {
         ArrayList<ArrayList<Integer>> retVal = new ArrayList<>();
-        
+
         // dla każdego twita 
         for (ArrayList<Integer> arrayList : toNormalize) {
             // dla każdej kategori:
             ArrayList<Integer> newList = new ArrayList<>();
             for (int i2 = 0; i2 < 5; i2++) {
-                newList.add( arrayList.get(i2) );
+                newList.add(arrayList.get(i2));
             }
             for (int i2 = 0; i2 < categoryBands.size(); i2++) {
                 int oryginalValue = arrayList.get(i2 + 5);
@@ -74,11 +75,11 @@ public class BagOfWords {
                         && oryginalValue > categoryBands.get(i2).get(normalizedValue)) {
                     normalizedValue++;
                 }
-                System.out.println(i2 + " " + oryginalValue + " -> " + normalizedValue +" " + arrayList.get(i2));
+                System.out.println(i2 + " " + oryginalValue + " -> " + normalizedValue + " " + arrayList.get(i2));
                 //arrayList.set(i2+5, normalizedValue);
                 newList.add(normalizedValue);
             }
-            newList.add(arrayList.get(arrayList.size()-1));
+            newList.add(arrayList.get(arrayList.size() - 1));
             retVal.add(newList);
         }
 
@@ -87,16 +88,23 @@ public class BagOfWords {
 
     public ArrayList<Integer> scoreAgainsAll(String twit) {
         ArrayList<Integer> retVal = new ArrayList<>();
+        twit = twit.replaceAll("http://[^ ]+", "");
+        List<String> twitWords = Stemmer.getWordsOnlyForTags(twit, "NN", "VB");
         for (int i = 0; i < alhmsacBags.size(); i++) {
-            retVal.add(scoreAgainstSpecific(twit, i));
+            retVal.add(scoreAgainstSpecific(twitWords, i));
         }
         return retVal;
     }
 
     public Integer scoreAgainstSpecific(String twit, Integer i) {
+        List<String> twitWords = Stemmer.getWordsOnlyForTags(twit, "NN", "VB");
+        return scoreAgainstSpecific(twitWords, i);
+    }
+
+    public Integer scoreAgainstSpecific(List<String> twitWords, Integer i) {
         HashMap<String, AtomicInteger> hm = alhmsacBags.get(i);
         Integer score = 0;
-        List<String> twitWords = Stemmer.getWordsOnlyForTags(twit, "NN", "VB");
+
         for (String string : twitWords) {
             if (hm.containsKey(string)) {
                 score += hm.get(string).get();

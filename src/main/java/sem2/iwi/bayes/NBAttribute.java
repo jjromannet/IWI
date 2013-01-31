@@ -5,6 +5,8 @@
 package sem2.iwi.bayes;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -41,8 +43,12 @@ public class NBAttribute {
                 && probabilityMap.containsKey(attrVal)
                 && probabilityMap.get(attrVal).containsKey(outVal)
             ){
-            
-            return ((double)(probabilityMap.get(attrVal).get(outVal).get() ))/((double) probabilityMap.get(attrVal).size());
+            int sum = 0;
+            for ( AtomicInteger object : probabilityMap.get(attrVal).values()) {
+                sum += object.get();
+            }
+                    
+            return ((double)(probabilityMap.get(attrVal).get(outVal).get() ))/((double) sum);
         }
         
         return almostZero();

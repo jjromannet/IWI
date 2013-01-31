@@ -180,9 +180,11 @@ public class MainPanel extends javax.swing.JPanel {
     private NaiveClassifier nc = null;
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         // TODO add your handling code here:
+        
         File map = new File(jTextField1.getText() + ".dict");
         File f = new File(jTextField1.getText());
         if (f.exists()) {
+            jTextArea1.append("Uczenie ...\n");
             try {
                 ArrayList<NBValuesVector> alnbvv = InOut.getInputStreamAsVectorList(new FileInputStream(f));
                 HashMap<String, String> hm = new HashMap<>();
@@ -204,9 +206,9 @@ public class MainPanel extends javax.swing.JPanel {
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+            jTextArea1.append("Uczenie zakończone\n");
         } else {
-            // TODO
+            jTextArea1.append("!Błąd podany plik nie istnieje!\n");
         }
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -214,14 +216,18 @@ public class MainPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         File f = new File(jTextField2.getText());
         if (nc != null && f.exists()) {
+            jTextArea1.append("Testowanie ...\n");
             try {
                 ArrayList<NBValuesVector> alnbvv = InOut.getInputStreamAsVectorList(new FileInputStream(f));
                 NBScores nbs = nc.test(alnbvv);
                 jTextArea1.append(nbs.toString());
+                jTextArea1.append("Testowanie ukończone\n");
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
+        }else{
+            jTextArea1.append("!Błąd podany plik nie istnieje lub system nie został nauczony!\n");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables

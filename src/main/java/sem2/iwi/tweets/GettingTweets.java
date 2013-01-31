@@ -9,10 +9,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -97,6 +94,31 @@ public class GettingTweets {
             Logger.getLogger(GettingTweets.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+    }
+    
+    public static Map<String,Integer> readCategoriesDictionary(){
+        
+        Map<String,Integer> categoryMappings = new HashMap<String,Integer>();
+        
+        Path path = Paths.get(IWIUtils.getPropertyValue("categoriesDictionaryFile"));
+        try {
+            Scanner scanner =  new Scanner(path);
+            
+            while (scanner.hasNextLine()){
+
+                String[] result = scanner.nextLine().split("\\t");
+                
+                if(result.length!=1){
+                    categoryMappings.put(result[0], Integer.parseInt(result[1]));
+                }
+                
+            }
+            scanner.close();
+        } catch (IOException ex) {
+            Logger.getLogger(GettingTweets.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return categoryMappings;
     }
     
     public static String gettingTweets(List<String> users, String noOfTweets){

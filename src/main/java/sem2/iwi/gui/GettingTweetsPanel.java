@@ -5,7 +5,9 @@
 package sem2.iwi.gui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.swing.JTextField;
 
 /**
@@ -133,6 +135,8 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
         // TODO add your handling code here:
         //getting Tweets statistics
         
+        Map<String,Integer> categoryMappings = new HashMap<String,Integer>();
+        categoryMappings = sem2.iwi.tweets.GettingTweets.readCategoriesDictionary();
         
         
     }//GEN-LAST:event_jButton2ActionPerformed

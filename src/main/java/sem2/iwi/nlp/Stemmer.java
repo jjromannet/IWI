@@ -33,7 +33,7 @@ public class Stemmer {
 
     }
 
-    private static ArrayList<String> getWordsOnlyForTags(String forPosTagging, String... tags) {
+    public static ArrayList<String> getWordsOnlyForTags(String forPosTagging, String... tags) {
         ArrayList<String> retVal = new ArrayList<>();
         
         try {

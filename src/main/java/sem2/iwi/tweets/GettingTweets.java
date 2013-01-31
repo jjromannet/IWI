@@ -203,6 +203,7 @@ public class GettingTweets {
                     }
                 }
         }
+        retVal = bow.normalize(retVal);
         return retVal;
     }
     

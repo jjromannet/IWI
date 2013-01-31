@@ -33,7 +33,7 @@ public class NBOutputValue {
     
     @Override
     public boolean equals(Object o){
-        return (o instanceof NBOutputValue) && ((NBAttributeValue)o).hashCode() == this.hashCode();
+        return (o instanceof NBOutputValue) && ((NBOutputValue)o).hashCode() == this.hashCode();
     }
 
     @Override

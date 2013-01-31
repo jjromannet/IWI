@@ -1,14 +1,14 @@
 package sem2.iwi;
 
-import sem2.iwi.io.InOut;
-import sem2.iwi.bayes.NBOutputValue;
-import sem2.iwi.bayes.NaiveClassifier;
-import sem2.iwi.bayes.NBValuesVector;
-import sem2.iwi.bayes.NBAttributeValue;
 import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.JFrame;
+import sem2.iwi.bayes.NBAttributeValue;
+import sem2.iwi.bayes.NBOutputValue;
+import sem2.iwi.bayes.NBValuesVector;
+import sem2.iwi.bayes.NaiveClassifier;
 import sem2.iwi.gui.MainWindow;
+import sem2.iwi.io.InOut;
 
 /**
  * Hello world!

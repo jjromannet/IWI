@@ -12,10 +12,12 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
+import sem2.iwi.bayes.NBOutputValue;
 import sem2.iwi.bayes.NBScores;
 import sem2.iwi.bayes.NBValuesVector;
 import sem2.iwi.bayes.NaiveClassifier;
 import sem2.iwi.io.InOut;
+import sem2.iwi.tweets.GettingTweets;
 
 /**
  *
@@ -78,6 +80,11 @@ public class MainPanel extends javax.swing.JPanel {
         jLabel3.setText("Twit do klasyfikacji");
 
         jButton3.setText("Klasyfikuj");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         jButton4.setText("Testowanie");
         jButton4.addActionListener(new java.awt.event.ActionListener() {
@@ -230,6 +237,17 @@ public class MainPanel extends javax.swing.JPanel {
             jTextArea1.append("!Błąd podany plik nie istnieje lub system nie został nauczony!\n");
         }
     }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        ArrayList<Integer> ali = GettingTweets.getAllMetrics(jTextField3.getText(), null);
+        NBOutputValue nbov = nc.classifyVector(new NBValuesVector("", ali.toArray(new Integer[0])));
+
+        jTextArea1.append(String.format("Twitt: '%s'\n\tzostał sklasyfikowany jako: %s(%d)\n", jTextField3.getText(), nbov.getName(), nbov.getKey()));
+        //
+                
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

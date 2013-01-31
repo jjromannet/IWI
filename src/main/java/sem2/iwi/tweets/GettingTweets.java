@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import sem2.iwi.bayes.NBOutputValue;
 import sem2.iwi.nlp.BagOfWords;
 import sem2.iwi.utils.IWIUtils;
 import twitter4j.*;
@@ -187,15 +188,18 @@ public class GettingTweets {
             Logger.getLogger(GettingTweets.class.getName()).log(Level.SEVERE, null, tex);
         }
         
-        for (Map.Entry<String, ArrayList<String>> me : forBOW.entrySet()) {
-            bow.addNewBag(me.getValue());
-        }
         
         
         return content;
     }
     
-    public static ArrayList<ArrayList<Integer>> getForBayes(){
+    public static ArrayList<ArrayList<Integer>> getForBayes(boolean newBOW ){
+        
+        if(newBOW){
+            for (Map.Entry<String, ArrayList<String>> me : forBOW.entrySet()) {
+                bow.addNewBag(me.getValue());
+            }
+        }
         
         ArrayList<ArrayList<Integer>> retVal = new ArrayList<>();
         if(forBOW != null){
@@ -204,6 +208,9 @@ public class GettingTweets {
                         retVal.add(getAllMetrics(twit, me.getKey()));
                     }
                 }
+        }
+        if(newBOW){
+            bow.createNormalizationVector(retVal);
         }
         retVal = bow.normalize(retVal);
         return retVal;
@@ -269,8 +276,10 @@ public class GettingTweets {
         ArrayList<Integer> retVal = new ArrayList<>();
         Collections.addAll(retVal, getGenericMetrics(twit));
         retVal.addAll(bow.scoreAgainsAll(twit));
-        retVal.add(readCategoriesDictionary().get(category));
+        if(category != null){
+            retVal.add(readCategoriesDictionary().get(category));
+        }
         return retVal;
     }
-    
+           
 }

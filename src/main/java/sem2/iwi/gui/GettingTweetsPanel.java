@@ -4,11 +4,15 @@
  */
 package sem2.iwi.gui;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.JTextField;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 import sem2.iwi.tweets.GettingTweets;
 
 /**
@@ -44,6 +48,9 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
         jTextArea2 = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jTextField3 = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        jCheckBox1 = new javax.swing.JCheckBox();
 
         jLabel1.setText("Pobierz tweety");
 
@@ -87,6 +94,13 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
             }
         });
 
+        jTextField3.setText("PlikDoNauki.BLA");
+
+        jLabel4.setText("nazwa pliku");
+
+        jCheckBox1.setSelected(true);
+        jCheckBox1.setText("nowe worki słów");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -96,9 +110,14 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
-                        .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField3, javax.swing.GroupLayout.DEFAULT_SIZE, 14, Short.MAX_VALUE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jCheckBox1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
                         .addGap(27, 27, 27))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -139,7 +158,11 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton2)
+                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)
+                    .addComponent(jCheckBox1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
                 .addContainerGap())
@@ -168,7 +191,7 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
         Map<String,Integer> categoryMappings = new HashMap<String,Integer>();
         categoryMappings = sem2.iwi.tweets.GettingTweets.readCategoriesDictionary();
         
-        ArrayList<ArrayList<Integer>> alali = GettingTweets.getForBayes();
+        ArrayList<ArrayList<Integer>> alali = GettingTweets.getForBayes(jCheckBox1.isSelected());
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%s %s\n", alali.size(), alali.get(0).size() ));
         for (ArrayList<Integer> arrayList : alali) {
@@ -176,6 +199,13 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
                 sb.append(i).append(" ");
             }
             sb.append("\n");
+        }
+        if(jTextField3.getText().length() > 0){
+            try {
+                FileUtils.write(new File(jTextField3.getText()), sb);
+            } catch (IOException ex) {
+                Logger.getLogger(GettingTweetsPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
         jTextArea2.setText(sb.toString());
     }//GEN-LAST:event_jButton2ActionPerformed
@@ -187,15 +217,18 @@ public class GettingTweetsPanel extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
+    private javax.swing.JTextField jTextField3;
     // End of variables declaration//GEN-END:variables
 
 

@@ -38,8 +38,8 @@ public class BagOfWords {
         alhmsacBags.add(hm);
     }
 
-    public ArrayList<ArrayList<Integer>> normalize(ArrayList<ArrayList<Integer>> toNormalize) {
-        ArrayList<ArrayList<Integer>> retVal = new ArrayList<>();
+    public void createNormalizationVector(ArrayList<ArrayList<Integer>> toNormalize) {
+        categoryBands = new ArrayList<>();
         int sub = toNormalize.get(0).size() - 1;
 // length + categories - wynik
         for (int categoryNo = 5; categoryNo < sub; categoryNo++) {
@@ -56,7 +56,10 @@ public class BagOfWords {
             }
             categoryBands.add(catBounds);
         }
-
+    }
+    public ArrayList<ArrayList<Integer>> normalize(ArrayList<ArrayList<Integer>> toNormalize) {
+        ArrayList<ArrayList<Integer>> retVal = new ArrayList<>();
+        
         // dla każdego twita 
         for (ArrayList<Integer> arrayList : toNormalize) {
             // dla każdej kategori:

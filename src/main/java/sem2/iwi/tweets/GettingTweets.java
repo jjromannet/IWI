@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import sem2.iwi.utils.IWIUtils;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
@@ -164,6 +166,50 @@ public class GettingTweets {
         twitter.setOAuthAccessToken(accessToken);
     
         return twitter;
+    }
+     
+    public static Integer[] getGenericMetrics(String twit){
+    
+        Integer[] metrics = new Integer[6];
+        
+        Pattern patternHash = Pattern.compile("#"), patternMention = Pattern.compile("@"), patternUrl = Pattern.compile("http://");
+        
+        Matcher  matcherHash = patternHash.matcher(twit), matcherMention = patternMention.matcher(twit), matcherUrl = patternUrl.matcher(twit);
+
+        int count = 0;
+        while (matcherHash.find())
+            count++;
+
+        metrics[0] = count;
+        
+        count=0;
+        while (matcherMention.find())
+            count++;
+
+        metrics[1] = count;
+        
+        count=0;
+        while (matcherUrl.find())
+            count++;
+
+        metrics[2] = count;
+        
+        List<String> wl = sem2.iwi.nlp.Stemmer.getWordsOnlyForTags(twit,  "VB");
+        
+        metrics[3] = wl.size();
+        
+        wl.removeAll(wl);
+        
+        wl = sem2.iwi.nlp.Stemmer.getWordsOnlyForTags(twit,  "NN");
+        
+        metrics[4] = wl.size();
+        
+        metrics[5] = twit.length();
+        
+        System.out.println(metrics[3]);
+        System.out.println(metrics[4]);
+                
+        return metrics;
     }
      
 }

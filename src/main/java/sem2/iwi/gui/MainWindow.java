@@ -26,14 +26,17 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        mainTwellowCrawler1 = new sem2.iwi.crawler.MainTwellowCrawler();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         mainPanel1 = new sem2.iwi.gui.MainPanel();
         twellowCrawler1 = new sem2.iwi.gui.TwellowCrawler();
+        gettingTweets1 = new sem2.iwi.gui.GettingTweetsPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jTabbedPane1.addTab("Klasyfikator", mainPanel1);
         jTabbedPane1.addTab("Kategorie Twittów", twellowCrawler1);
+        jTabbedPane1.addTab("Pobieranie tweetów", gettingTweets1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -41,14 +44,14 @@ public class MainWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 377, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -90,8 +93,10 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private sem2.iwi.gui.GettingTweetsPanel gettingTweets1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private sem2.iwi.gui.MainPanel mainPanel1;
+    private sem2.iwi.crawler.MainTwellowCrawler mainTwellowCrawler1;
     private sem2.iwi.gui.TwellowCrawler twellowCrawler1;
     // End of variables declaration//GEN-END:variables
 }

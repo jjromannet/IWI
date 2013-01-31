@@ -5,6 +5,7 @@
 package sem2.iwi.gui;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import javax.swing.ListSelectionModel;
 import sem2.iwi.crawler.MainTwellowCrawler;
 
@@ -130,6 +131,7 @@ public class TwellowCrawler extends javax.swing.JPanel {
             }
         }
         jTextArea1.setText(MainTwellowCrawler.getNicksForCategoryNames(retVal));
+        sem2.iwi.tweets.GettingTweets.writeToFileTwellowCategories(MainTwellowCrawler.getNicksForCategoryNames(retVal));
     }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

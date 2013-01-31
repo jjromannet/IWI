@@ -88,7 +88,7 @@ public class GettingTweets {
             int i=1;
             
             for(String s : categories){
-                bw.write(i + " " + s + "\n");
+                bw.write(i + "\t" + s + "\n");
                 i++;
             }
             
@@ -111,7 +111,7 @@ public class GettingTweets {
 
                 while (scanner.hasNextLine()){
 
-                    String[] result = scanner.nextLine().split(" ");
+                    String[] result = scanner.nextLine().split("\t");
 
                     if(result.length!=1){
                         categoryMappings.put( result[1],Integer.parseInt(result[0]));

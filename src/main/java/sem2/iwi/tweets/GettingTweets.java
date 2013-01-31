@@ -126,7 +126,7 @@ public class GettingTweets {
         return categoryMappings;
     }
     private static HashMap<String, ArrayList<String>> forBOW = null;
-    public static String gettingTweets(List<String> users, String noOfTweets){
+    public static String gettingTweets(List<String> users, String noOfTweets, String noOfPage){
         
         Twitter twitter = getTwitterInstance();
         
@@ -159,18 +159,20 @@ public class GettingTweets {
                     
                     if(exists!=false){
                         
-                        List<Status> statuses = twitter.getUserTimeline(result[1], new Paging(1,Integer.parseInt(noOfTweets) ));
+                        List<Status> statuses = twitter.getUserTimeline(result[1], new Paging(Integer.parseInt(noOfPage),Integer.parseInt(noOfTweets) ));
 
                         for (Status status : statuses) {
+                            String s = status.getText();
+                            s.replace("\n\r", " ");
                             if(forBOW.containsKey(result[0])){
-                                forBOW.get(result[0]).add(status.getText());
+                                forBOW.get(result[0]).add(s);
                             }else{
                                 ArrayList<String> altmp = new ArrayList<>();
-                                altmp.add(status.getText());
+                                altmp.add(s);
                                 forBOW.put(result[0], altmp);
                             }
-                            bw.write(result[0] + " || " + status.getText() +"\n");
-                            content+=result[0] + " || " + status.getText() +"\n";
+                            bw.write(result[0] + " || " + s +"\n");
+                            content+=result[0] + " || " + s +"\n";
                         }
                         
                     }

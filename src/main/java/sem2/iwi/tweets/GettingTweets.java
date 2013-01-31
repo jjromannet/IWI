@@ -165,6 +165,7 @@ public class GettingTweets {
                         for (Status status : statuses) {
                             String s = status.getText();
                             s.replace("\n\r", " ");
+                            s = removeSpecialCharacters(s);
                             if(forBOW.containsKey(result[0])){
                                 forBOW.get(result[0]).add(s);
                             }else{
@@ -281,5 +282,19 @@ public class GettingTweets {
         }
         return retVal;
     }
+     
+     public static String removeSpecialCharacters(String input){
+        
+        String output; 
+        Pattern unicodeOutliers = Pattern.compile("[^\\x00-\\x7F]",
+                Pattern.UNICODE_CASE | Pattern.CANON_EQ
+                        | Pattern.CASE_INSENSITIVE);
+        Matcher unicodeOutlierMatcher = unicodeOutliers.matcher(input);
+
+        output = unicodeOutlierMatcher.replaceAll("");
+        
+        return output;
+         
+     }
            
 }
